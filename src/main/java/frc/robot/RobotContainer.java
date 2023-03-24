@@ -32,6 +32,7 @@ public class RobotContainer {
   final Bucket m_bucketSubsystem = new Bucket(pneumatics);
   final ToggleCompressor toggleCompressor = new ToggleCompressor(pneumatics);
   final Gyro gyro = new Gyro();
+  final DriveSubsystem m_slowmode = new DriveSubsystem();
 
   final LimelightCommand limelightCommand = new LimelightCommand(limeLight);
   final IntakeCommand runIntake = new IntakeCommand(m_intakeSubsystem, Constants.intake.fwdSpeed);
@@ -57,7 +58,8 @@ public class RobotContainer {
       new ArcadeDrive(
             m_driveSubsystem,
             () -> ((-movementJoystick.getLeftTriggerAxis() + movementJoystick.getRightTriggerAxis())),
-            () -> (-movementJoystick.getLeftX() )
+            () -> (-movementJoystick.getLeftX() ),
+            () -> (movementJoystick.x().getAsBoolean())
       ));
 
 
@@ -76,7 +78,7 @@ public class RobotContainer {
     manipulatorJoystick.leftBumper() //intake
     .whileTrue(runIntake);
 
-    manipulatorJoystick.rightBumper()//outake
+    manipulatorJoystick.rightBumper() //outake
     .whileTrue(runIntakeBackward);
 
     manipulatorJoystick.x()

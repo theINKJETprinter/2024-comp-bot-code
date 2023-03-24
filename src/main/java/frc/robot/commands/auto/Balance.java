@@ -18,11 +18,11 @@ public class Balance extends CommandBase {
     private DriveSubsystem mDrivetrain;
     private final Gyro gyro;
 
-    private final PIDController pid = new PIDController(0.12, 0, 0.01);
+    private final PIDController pid = new PIDController(0.06, 0, 0.01);
 
     /** Creates a new BalanceRobot. */
     public Balance(DriveSubsystem driveTrain, Gyro gyro) {
-        // Use addRequirements() here to declare subsystem dependencies.
+        // Use addRequirements() here to declare subsystem dependencies. 
         mDrivetrain = driveTrain;
         this.gyro = gyro;
 
