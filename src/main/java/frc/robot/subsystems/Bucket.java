@@ -22,7 +22,7 @@ public class Bucket extends SubsystemBase {
     addChild("BucketDump", bucketSolenoid);
   }
 
-  public InstantCommand bucketToggle(){
+  public InstantCommand toggle(){
     return new InstantCommand(
       () -> bucketSolenoid.toggle()
     );
