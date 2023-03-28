@@ -5,7 +5,6 @@
 package frc.robot.commands.auto;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
@@ -24,33 +23,24 @@ public class AutonomousGrab extends SequentialCommandGroup {
   public AutonomousGrab(DriveSubsystem drive, IntakeSubsystem intake, Bucket bucket) {
     super(
       // dump milk crate
-      new InstantCommand(
-        () ->bucket.set(DoubleSolenoid.Value.kReverse),
-        bucket
-      ),
+      bucket.set(DoubleSolenoid.Value.kReverse),
       new WaitCommand(.5),
       //bring milk crate back up
-      new InstantCommand(
-        () -> bucket.set(DoubleSolenoid.Value.kForward),
-        bucket
-      ),
+      bucket.set(DoubleSolenoid.Value.kForward),
       new WaitCommand(.5),
       //go forward
       new DriveStraight(drive, 2.7, Constants.auto.fwdSpeed),
       //drop intake
-      new InstantCommand(
-        () -> intake.set(DoubleSolenoid.Value.kReverse),
-        intake
-      ),
+      intake.set(DoubleSolenoid.Value.kReverse),
       // start intake spinning
-      new InstantCommand(
-        () -> intake.intakeCargo(Constants.intake.fwdSpeed),
-        intake
-      ),
+      intake.setSpeed(Constants.intake.fwdSpeed),
       // drive forward into game piece
       new DriveStraight(drive, 2.8, Constants.auto.fwdSpeed),
+      //stop intake spinning
+      intake.stopMotors(),
       //drive back into community
       new DriveStraight(drive, 2.7, Constants.auto.revSpeed)
+    
     );
   }
 }

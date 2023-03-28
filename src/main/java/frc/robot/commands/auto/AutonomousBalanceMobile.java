@@ -4,7 +4,6 @@
 
 package frc.robot.commands.auto;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
@@ -29,16 +28,10 @@ public class AutonomousBalanceMobile extends SequentialCommandGroup {
     super(
       new WaitCommand(2),
       //dump game piece
-      new InstantCommand(
-        ()->bucket.set(DoubleSolenoid.Value.kForward),
-        bucket
-      ),
+      bucket.set(DoubleSolenoid.Value.kForward),
       new WaitCommand(1),
       //pick up milk crate
-      new InstantCommand(
-        ()->bucket.set(DoubleSolenoid.Value.kReverse),
-        bucket
-      ),
+      bucket.set(DoubleSolenoid.Value.kReverse),
       new WaitCommand(1),
       //go forward
       new DriveStraight(drive, 2.7,Constants.auto.fwdSpeed),
