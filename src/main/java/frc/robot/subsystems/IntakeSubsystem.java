@@ -43,7 +43,7 @@ public class IntakeSubsystem extends SubsystemBase {
     );
   }
 
-  public InstantCommand setIntakeSpeed(double speed) {
+  public InstantCommand setSpeed(double speed) {
     return new InstantCommand(
       () -> intakeMotorsGroup.set(speed)
     );
