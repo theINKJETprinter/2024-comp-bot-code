@@ -1,7 +1,9 @@
-package frc.robot.subsystems;
+ package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.intake;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import com.revrobotics.CANSparkMax;
@@ -9,13 +11,15 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class IntakeSubsystem extends SubsystemBase {
   
-
-  CANSparkMax intakeMotor1 = new CANSparkMax(Constants.intake.motor1,MotorType.kBrushless);
-  //CANSparkMax intakeMotor2 = new CANSparkMax(Constants.intake.motor2, MotorType.kBrushless);
   DoubleSolenoid intakeSolenoid;
 
+  CANSparkMax[] intakeMotors = {
+    new CANSparkMax(Constants.intake.motor1,MotorType.kBrushless),
+    new CANSparkMax(Constants.intake.motor2,MotorType.kBrushless)
+  };
 
-  MotorControllerGroup intakeMotors;
+  MotorControllerGroup intakeMotorsGroup;
+
   
   public IntakeSubsystem(PneumaticsSubsytem pneumatics) {
 
@@ -24,30 +28,38 @@ public class IntakeSubsystem extends SubsystemBase {
       Constants.intake.solenoid.revPort
     );
 
-    intakeMotor1.setInverted(true);
-    intakeMotor1.setSmartCurrentLimit(40, 25);
-    //intakeMotor2.setSmartCurrentLimit(40, 25);
-    intakeMotors = new MotorControllerGroup(intakeMotor1);
+    for(CANSparkMax s : intakeMotors){
+      s.setSmartCurrentLimit(40, 25);
+      s.setInverted(true);
+    }
+
+    intakeMotorsGroup = new MotorControllerGroup(intakeMotors);
 
     intakeSolenoid.set(DoubleSolenoid.Value.kForward);
   }
 
-  public void toggleIntakepiston(){
-    intakeSolenoid.toggle();
+  public InstantCommand togglePiston(){
+    return new InstantCommand(
+      () -> intakeSolenoid.toggle();
+    );
   }
 
-  public void intakeCargo(double speed) {
-    //intakeMotors.set(speed);
-    intakeMotor1.set(speed);
-    //intakeMotor2.set(-speed);
+  public InstantCommand setIntakeSpeed(double speed) {
+    return new InstantCommand(
+      () -> intakeMotorsGroup.set(speed)
+    );
   }
 
-  public void stopMotors(){
-    intakeMotors.stopMotor();
+  public InstantCommand stopMotors(){
+    return new InstantCommand(
+      () -> intakeMotorsGroup.stopMotor()
+    );
   }
 
-  public void set(DoubleSolenoid.Value val){
-    intakeSolenoid.set(val);
+  public InstantCommand set(DoubleSolenoid.Value val){
+    return new InstantCommand(
+      () -> intakeSolenoid.set(val)
+    );
   }
 
 }
