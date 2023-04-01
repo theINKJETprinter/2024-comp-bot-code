@@ -53,27 +53,27 @@ public class AutonomousGrab extends SequentialCommandGroup {
          this.bucket
        ),
        
-       new WaitCommand(.5),
+       new WaitCommand(0.5),
 
        new InstantCommand(
         ()->{this.bucket.set(DoubleSolenoid.Value.kForward);},
         this.bucket
       ),
 
-      new WaitCommand(.5),
+      new WaitCommand(0.5),
       
 
       new DriveStraight(drive, 2.7,Constants.auto.fwdSpeed),
 
-      new InstantCommand(
-        ()->{this.intake.set(DoubleSolenoid.Value.kReverse);},
-        this.intake
-      ),
+      //new InstantCommand(
+        //()->{this.intake.set(DoubleSolenoid.Value.kReverse);},
+        //this.intake
+      //),
       new InstantCommand(()->{
-        this.intake.intakeCargo(Constants.intake.fwdSpeed);
+        //this.intake.intakeCargo(Constants.intake.fwdSpeed);
         new DriveStraight(drive, 2.8, Constants.auto.fwdSpeed);
 
-      }),
+      })//,
 
       //new WaitCommand(1),
 
@@ -81,7 +81,7 @@ public class AutonomousGrab extends SequentialCommandGroup {
       //   this.intake.intakeCargo(0);
       // }),
 
-      new DriveStraight(drive, 2.7,Constants.auto.revSpeed)  
+      //new DriveStraight(drive, 2.7,Constants.auto.revSpeed)  
     );
   }
 }
