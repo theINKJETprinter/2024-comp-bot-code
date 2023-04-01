@@ -18,7 +18,7 @@ public class Balance extends CommandBase {
     private DriveSubsystem mDrivetrain;
     private final Gyro gyro;
 
-    private final PIDController pid = new PIDController(0.06, 0, 0.01);
+    private final PIDController pid = new PIDController(0.09, 0, 0.01);
 
     /** Creates a new BalanceRobot. */
     public Balance(DriveSubsystem driveTrain, Gyro gyro) {
@@ -42,7 +42,7 @@ public class Balance extends CommandBase {
     public void execute() {
         var currentAngle = gyro.getRoll();
 
-        if (currentAngle < 1 || currentAngle > - 1) {
+        if (currentAngle < 4 || currentAngle > - 4) {
             var controllerOutput = pid.calculate(currentAngle);
 
             mDrivetrain.drive(controllerOutput, 0);
