@@ -44,29 +44,40 @@ public final class Constants {
     // Changing Solenoid Values idk 50/50 this'll work
     public static final class bucket {
         public static final class solenoid {
-            public static final int fwdPort = 2;
-            public static final int revPort = 3;
+            public static final int fwdPort = 6;
+            public static final int revPort = 7;
 
         }
     }
 
     public static final class intake{
         public static final class solenoid {
-            public static final int fwdPort = 0;
-            public static final int revPort = 1;
+            public static final int fwdPort = 3;
+            public static final int revPort = 5;
 
         }
         public static final int motor1 = 6;
         //public static final int motor2 = 11;
         
         //reversed
-        public static final double fwdSpeed = 0.4;
+        public static final double fwdSpeed = 0.8;
         public static final double revSpeed = -1;
     }
 
     public static final class auto{
         public static final double fwdSpeed = -0.6;
         public static final double revSpeed = 0.4;
+
+        public static final class balancePID{
+            public static final double kP = 0.12;
+            public static final double kI = 0;
+            public static final double kD = 0.1;
+            public static final double outputMax = 1;
+            public static final double outputMin = -1;
+
+            public static final double positionTolerance = 2;
+            public static final double velocityTolerance = 2;
+        }
     }
 
     public static final int MOVEMENT_JOYSTICK = 0;
