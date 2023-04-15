@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-public class IntakeSubsystem extends SubsystemBase {
+public class Intake extends SubsystemBase {
   
   DoubleSolenoid intakeSolenoid;
 
@@ -20,7 +20,7 @@ public class IntakeSubsystem extends SubsystemBase {
   MotorControllerGroup intakeMotorsGroup;
 
   
-  public IntakeSubsystem(PneumaticsSubsytem pneumatics) {
+  public Intake(Pneumatics pneumatics) {
 
     intakeSolenoid = pneumatics.makeDoubleSolenoid(
       Constants.intake.solenoid.fwdPort, 

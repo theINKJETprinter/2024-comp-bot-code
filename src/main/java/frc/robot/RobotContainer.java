@@ -21,10 +21,10 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
 
-  final LimelightSubsystem limeLight = new LimelightSubsystem();
-  final PneumaticsSubsytem pneumatics = new PneumaticsSubsytem();
-  final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
-  final IntakeSubsystem intake = new IntakeSubsystem(pneumatics);
+  final Limelight limeLight = new Limelight();
+  final Pneumatics pneumatics = new Pneumatics();
+  final DriveBase m_driveSubsystem = new DriveBase();
+  final Intake intake = new Intake(pneumatics);
   final Bucket bucket = new Bucket(pneumatics);
   final Gyro gyro = new Gyro();
 

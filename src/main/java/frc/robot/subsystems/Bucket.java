@@ -11,8 +11,8 @@ public class Bucket extends SubsystemBase {
 
   DoubleSolenoid bucketSolenoid;
   
-  /** Creates a new DoubleSolenoid  */
-  public Bucket(PneumaticsSubsytem pneumatics) {
+  /** Creates a new pnumatics. */
+  public Bucket(Pneumatics pneumatics) {
     bucketSolenoid = pneumatics.makeDoubleSolenoid(
       Constants.bucket.solenoid.fwdPort, 
       Constants.bucket.solenoid.revPort
