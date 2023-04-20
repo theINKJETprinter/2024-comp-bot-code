@@ -30,6 +30,10 @@ public class Intake extends SubsystemBase {
     intakeMotors = new MotorControllerGroup(intakeMotor1);
 
     intakeSolenoid.set(DoubleSolenoid.Value.kForward);
+    setName("Intake");
+    addChild("intakeMotor 1", new MotorControllerGroup(intakeMotor1));
+    addChild("intakeMotor 2", new MotorControllerGroup(intakeMotor2));
+    addChild("intake solenoid", intakeSolenoid);
   }
 
   public void toggleIntakepiston(){
