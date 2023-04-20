@@ -52,8 +52,8 @@ public final CANSparkMax sparkMaxrf = new CANSparkMax(Constants.drive.rf, MotorT
     //m_RobotDrive = new DifferentialDrive(rightMotors, leftMotors)
     m_RobotDrive = new DifferentialDrive(leftMotors, rightMotors);
 
-    addChild("Drive", m_RobotDrive);
-    
+    addChild("differentialDrive", m_RobotDrive);
+    setName("DriveBase");
   }
 
   public void drive(final double ySpeed, final double rotateValue) {
