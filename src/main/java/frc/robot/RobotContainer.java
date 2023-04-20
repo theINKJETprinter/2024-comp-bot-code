@@ -63,7 +63,6 @@ public class RobotContainer {
 
     gyro.log();
 
-    SmartDashboard.putData(limeLight);
     SmartDashboard.putData(pneumatics);
     SmartDashboard.putData(m_driveSubsystem);
     SmartDashboard.putData(m_intakeSubsystem);
