@@ -8,6 +8,7 @@ import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.commands.auto.AutoSelector;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
@@ -62,6 +63,12 @@ public class RobotContainer {
 
     gyro.log();
 
+    SmartDashboard.putData(limeLight);
+    SmartDashboard.putData(pneumatics);
+    SmartDashboard.putData(m_driveSubsystem);
+    SmartDashboard.putData(m_intakeSubsystem);
+    SmartDashboard.putData(m_bucketSubsystem);
+    SmartDashboard.putData(gyro);
   }
 
   private void configureButtonBindings() {
