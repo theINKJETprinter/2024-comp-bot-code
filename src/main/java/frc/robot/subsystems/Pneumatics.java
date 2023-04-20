@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Pneumatics extends SubsystemBase{
@@ -15,6 +14,8 @@ public class Pneumatics extends SubsystemBase{
 
   public Pneumatics(){
     compressor.enableDigital();
+    addChild("compressor", compressor);
+    setName("Pneumatics");
   }
 
   public Compressor getCompressor(){
@@ -24,12 +25,8 @@ public class Pneumatics extends SubsystemBase{
   public void toggleCompressor(){
     if(compressor.isEnabled()){
       compressor.disable();
-      // display Compressor Data
-      SmartDashboard.putData(compressor);
-
     }else{
       compressor.enableDigital();
-      SmartDashboard.putData(compressor);
     }
   }
 
