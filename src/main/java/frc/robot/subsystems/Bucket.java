@@ -19,7 +19,8 @@ public class Bucket extends SubsystemBase {
     );
 
     bucketSolenoid.set(DoubleSolenoid.Value.kForward);
-    addChild("BucketDump", bucketSolenoid);
+    addChild("BucketSolenoid", bucketSolenoid);
+    setName("Bucket");
   }
 
   public void bucketToggle(){
