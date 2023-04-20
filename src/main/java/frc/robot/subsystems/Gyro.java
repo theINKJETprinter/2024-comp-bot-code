@@ -13,7 +13,7 @@ public class Gyro extends SubsystemBase{
   private final AHRS gyro = new AHRS();
 
   public Gyro(){
-    
+    setName("Gyro");
     addChild("Gyro", gyro);
     gyro.calibrate();
   }
