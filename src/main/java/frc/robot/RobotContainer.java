@@ -38,7 +38,7 @@ public class RobotContainer {
   final AutoSelector selector = new AutoSelector(m_driveSubsystem, m_intakeSubsystem, m_bucketSubsystem, gyro);
 
   final CommandXboxController movementJoystick = new CommandXboxController(Constants.MOVEMENT_JOYSTICK);
-  final CommandXboxController manipulatorJoystick = new CommandXboxController(Constants.MANIPULATOR_JOYSTICK);
+
 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -65,19 +65,19 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
-    manipulatorJoystick.leftBumper() //intake
+    movementJoystick.leftBumper() //intake
     .whileTrue(runIntake);
 
-    manipulatorJoystick.rightBumper()//outake
+    movementJoystick.rightBumper()//outake
     .whileTrue(runIntakeBackward);
 
-    manipulatorJoystick.x()
+    movementJoystick.x()
     .onTrue(toggleBucket);
 
-    manipulatorJoystick.a()
+    movementJoystick.a()
     .onTrue(toggleIntake);
 
-    manipulatorJoystick.y()
+    movementJoystick.y()
     .onTrue(toggleCompressor);
   }
 
