@@ -70,6 +70,8 @@ public final class Constants {
         public static final double revSpeed = -0.4;
         public static final double wheelRadius=3;
         public static final double TicksPerRotation= 4096;
+        public static final double turnVarMin=0;
+        public static final double turnVarMax=1;
 
         public static final class balancePID{
             public static final double kP = 0.06;

@@ -33,4 +33,7 @@ public class Gyro extends SubsystemBase{
   public double getRoll() {
     return gyro.getRoll();
   }
+  public double getYaw(){
+    return gyro.getYaw();
+  }
 }

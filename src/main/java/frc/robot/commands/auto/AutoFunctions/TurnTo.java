@@ -2,32 +2,36 @@ package frc.robot.commands.auto.AutoFunctions;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.subsystems.DriveBase;
+import frc.robot.subsystems.Gyro;
 
-
-public class DriveStraight extends CommandBase {
+public class TurnTo extends RunCommand {
     // Encoder leftEncoder = new Encoder(4,5); 
     // Encoder rightEncoder = new Encoder(5);
 
 
     private final DriveBase driveBase;
-    private final PIDController pid = new PIDController(0.50, 0, 0.10);
+    private Gyro gyro;
+    private static final PIDController pid = new PIDController(0.50, 0, 0.10);
 
-    double setpoint;
-
-    public DriveStraight(DriveBase driveSubsystem, double feet) {
-      driveBase = driveSubsystem;
-      double inches= 3*12;
-      double wheelRotations=inches*(Constants.auto.wheelRadius*3.14*2);
-      double motorRotations=wheelRotations*Constants.drive.gearRatio;
-      setpoint=motorRotations*Constants.auto.TicksPerRotation;
-      SmartDashboard.getNumber("setpoint", setpoint);
+    double goal;
+    double startDegrees;
+    public TurnTo(DriveBase driveSubsystem, double degrees, Gyro gyro) {
+        super( ()-> driveSubsystem.drive(
+            MathUtil.clamp(
+					pid.calculate(degrees-gyro.getYaw()), 
+					Constants.auto.turnVarMin,
+					Constants.auto.turnVarMax
+				)/3.5,
+                0
+        )
+        );
+      SmartDashboard.getNumber("setpoint", degrees-gyro.getYaw());
+      this.gyro=gyro;
 
 
     
@@ -44,22 +48,22 @@ public class DriveStraight extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        driveBase.resetEncoder();
         pid.setSetpoint(0);
         SmartDashboard.getNumber("setpoint", setpoint);
+        
 
     }
 
     // Called every time the scheduler runs while the command is scheduled.
-    @Override
-    public void execute() {
-        SmartDashboard.getNumber("setpoint", setpoint);
+    // @Override
+    // public void execute() {
+    //     SmartDashboard.getNumber("setpoint", setpoint);
 
-        
-        if (driveBase.getEncoder() < setpoint ) {
-            driveBase.drive(pid.calculate(driveBase.getEncoder()), 0);
-        }
-    }
+
+    //     if (gyro.getYaw() != setpoint) {
+    //         driveBase.drive(0, pid.calculate(setpoint-gyro.getYaw()));
+    //     }
+    // }
 
     // Called once the command ends or is interrupted.
     @Override
@@ -71,7 +75,7 @@ public class DriveStraight extends CommandBase {
     @Override
     public boolean isFinished() {
         SmartDashboard.getNumber("setpoint-encoder", setpoint-driveBase.getEncoder());
-        return false;
+        return Gyro.getYaw=goal;
     }
 
       // Called repeatedly when this Command is scheduled to run
