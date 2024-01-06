@@ -9,7 +9,8 @@ import frc.robot.Constants;
 import frc.robot.subsystems.DriveBase;
 import frc.robot.subsystems.Gyro;
 
-public class TurnTo extends RunCommand {
+
+public class TurnTo extends CommandBase {
     // Encoder leftEncoder = new Encoder(4,5); 
     // Encoder rightEncoder = new Encoder(5);
 
@@ -17,21 +18,24 @@ public class TurnTo extends RunCommand {
     private final DriveBase driveBase;
     private Gyro gyro;
     private static final PIDController pid = new PIDController(0.50, 0, 0.10);
+    public double setpoint;
 
     double goal;
     double startDegrees;
     public TurnTo(DriveBase driveSubsystem, double degrees, Gyro gyro) {
-        super( ()-> driveSubsystem.drive(
-            MathUtil.clamp(
-					pid.calculate(degrees-gyro.getYaw()), 
-					Constants.auto.turnVarMin,
-					Constants.auto.turnVarMax
-				)/3.5,
-                0
-        )
-        );
-      SmartDashboard.getNumber("setpoint", degrees-gyro.getYaw());
+        // super( ()-> driveSubsystem.drive(
+        //     MathUtil.clamp(
+		// 			pid.calculate(degrees-gyro.getYaw()), 
+		// 			Constants.auto.turnVarMin,
+		// 			Constants.auto.turnVarMax
+		// 		)/3.5,
+        //         0
+        // )
+        // );
+      setpoint = degrees;
+      driveBase=driveSubsystem;
       this.gyro=gyro;
+      SmartDashboard.getNumber("setpoint", degrees-gyro.getYaw());
 
 
     
@@ -41,8 +45,6 @@ public class TurnTo extends RunCommand {
     //   *Constants.auto.TicksPerRotation)//converts motor rotations to encoder ticks
     //   );
 
-    
-
     }
 
     // Called when the command is initially scheduled.
@@ -51,19 +53,16 @@ public class TurnTo extends RunCommand {
         pid.setSetpoint(0);
         SmartDashboard.getNumber("setpoint", setpoint);
         
-
     }
 
     // Called every time the scheduler runs while the command is scheduled.
-    // @Override
-    // public void execute() {
-    //     SmartDashboard.getNumber("setpoint", setpoint);
-
-
-    //     if (gyro.getYaw() != setpoint) {
-    //         driveBase.drive(0, pid.calculate(setpoint-gyro.getYaw()));
-    //     }
-    // }
+    @Override
+    public void execute() {
+        SmartDashboard.putNumber("setpoint", setpoint);
+        SmartDashboard.putNumber("pidOutput", pid.calculate(setpoint-gyro.getYaw()));
+        driveBase.drive(0, pid.calculate(setpoint-gyro.getYaw()));
+        
+    }
 
     // Called once the command ends or is interrupted.
     @Override
@@ -75,9 +74,8 @@ public class TurnTo extends RunCommand {
     @Override
     public boolean isFinished() {
         SmartDashboard.getNumber("setpoint-encoder", setpoint-driveBase.getEncoder());
-        return Gyro.getYaw=goal;
+        return Math.abs(gyro.getYaw()-goal)<=1;
     }
 
       // Called repeatedly when this Command is scheduled to run
-
 }

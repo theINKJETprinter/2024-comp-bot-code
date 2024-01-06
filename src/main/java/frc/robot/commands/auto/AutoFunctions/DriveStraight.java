@@ -55,10 +55,8 @@ public class DriveStraight extends CommandBase {
     public void execute() {
         SmartDashboard.getNumber("setpoint", setpoint);
 
+        driveBase.drive(pid.calculate(driveBase.getEncoder()), 0);
         
-        if (driveBase.getEncoder() < setpoint ) {
-            driveBase.drive(pid.calculate(driveBase.getEncoder()), 0);
-        }
     }
 
     // Called once the command ends or is interrupted.
@@ -71,7 +69,7 @@ public class DriveStraight extends CommandBase {
     @Override
     public boolean isFinished() {
         SmartDashboard.getNumber("setpoint-encoder", setpoint-driveBase.getEncoder());
-        return false;
+        return Math.abs(driveBase.getEncoder()-setpoint)<=1;
     }
 
       // Called repeatedly when this Command is scheduled to run
