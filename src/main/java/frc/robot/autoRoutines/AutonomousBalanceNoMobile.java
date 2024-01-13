@@ -43,7 +43,7 @@ public class AutonomousBalanceNoMobile extends SequentialCommandGroup {
       ),
       new WaitCommand(1),
       //go forward onto charge station
-      new DriveStraight(drive, 10),
+      new DriveStraight(drive, 10, false),
       // begin balancing
       new Balance(drive, gyro)
     );

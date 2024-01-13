@@ -44,10 +44,10 @@ public class AutonomousBalanceMobile extends SequentialCommandGroup {
       ),
       new WaitCommand(1),
       //go forward
-      new DriveStraight(drive, 18.66),
+      new DriveStraight(drive, 18.66, false),
       new WaitCommand(1),
       //go back
-      new DriveStraight(drive, 10),
+      new DriveStraight(drive, 10, true),
       // balance
       new Balance(drive, gyro)
     );

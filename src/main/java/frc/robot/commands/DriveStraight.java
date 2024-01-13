@@ -18,15 +18,18 @@ public class DriveStraight extends CommandBase {
 
 
     private final DriveBase driveBase;
-    private final PIDController pid = new PIDController(0.09, 0, 0.10);
+    private final PIDController pid = new PIDController(0.2, 0, 0.10);
     double setpoint;
-
+    int isRev=1;
     
-    public DriveStraight(DriveBase driveSubsystem, double feet) {
+    public DriveStraight(DriveBase driveSubsystem, double feet, boolean isReverse) {
       driveBase = driveSubsystem;
+      if (isReverse){
+        isRev=-1;
+      }
 
       addRequirements(driveBase);
-      pid.setTolerance(0.1);
+      pid.setTolerance(0.5);
 
       double inches= feet*12;
       double wheelRotations=inches/(Constants.auto.wheelRadius*3.14*2);
@@ -49,7 +52,7 @@ public class DriveStraight extends CommandBase {
     @Override
     public void initialize() {
         driveBase.resetEncoder();
-        pid.setSetpoint(setpoint);
+        pid.setSetpoint(setpoint*isRev);
 
 
     }
@@ -58,8 +61,9 @@ public class DriveStraight extends CommandBase {
     @Override
     public void execute() {
         SmartDashboard.putNumber("encoder", (driveBase.getEncoder()));
-
-        driveBase.drive(pid.calculate(driveBase.getEncoder()), 0);
+        SmartDashboard.putNumber("goal", setpoint);
+        
+        driveBase.drive(pid.calculate(driveBase.getEncoder())*isRev, 0);
     
     }
 
