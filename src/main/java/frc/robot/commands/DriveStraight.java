@@ -20,8 +20,8 @@ public class DriveStraight extends CommandBase {
     private final DriveBase driveBase;
     private final PIDController pid = new PIDController(0.09, 0, 0.10);
     double setpoint;
-    int count=0;
 
+    
     public DriveStraight(DriveBase driveSubsystem, double feet) {
       driveBase = driveSubsystem;
 
@@ -50,7 +50,6 @@ public class DriveStraight extends CommandBase {
     public void initialize() {
         driveBase.resetEncoder();
         pid.setSetpoint(setpoint);
-        SmartDashboard.putBoolean("has ended", false);
 
 
     }
@@ -58,11 +57,7 @@ public class DriveStraight extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        SmartDashboard.putNumber("goal", setpoint);
-        SmartDashboard.putNumber("count", count);
-        count++;
         SmartDashboard.putNumber("encoder", (driveBase.getEncoder()));
-        SmartDashboard.putNumber("pid output", pid.calculate(driveBase.getEncoder()));
 
         driveBase.drive(pid.calculate(driveBase.getEncoder()), 0);
     
@@ -72,14 +67,12 @@ public class DriveStraight extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         driveBase.drive(0, 0);
-        SmartDashboard.putBoolean("has ended", true);
 
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        SmartDashboard.putNumber("setpoint-encoder", setpoint-driveBase.getEncoder());
         return pid.atSetpoint();
     }
 

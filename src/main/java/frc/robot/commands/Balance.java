@@ -9,7 +9,7 @@ import frc.robot.subsystems.Gyro;
 
 public class Balance extends CommandBase {
 
-    private DriveBase mDrivetrain;
+    private DriveBase drive;
     private final Gyro gyro;
 
     private final PIDController pid = new PIDController(0.12, 0, 0.01);
@@ -17,9 +17,10 @@ public class Balance extends CommandBase {
     /** Creates a new BalanceRobot. */
     public Balance(DriveBase driveTrain, Gyro gyro) {
         // Use addRequirements() here to declare subsystem dependencies.
-        mDrivetrain = driveTrain;
+        drive = driveTrain;
         this.gyro = gyro;
-
+        addRequirements(gyro);
+        addRequirements(drive);
         pid.setTolerance(1);
 
         // lowPass = LinearFilter.movingAverage(3);
@@ -34,26 +35,24 @@ public class Balance extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        var currentAngle = gyro.getRoll();
 
-        if (currentAngle < 1 || currentAngle > - 1) {
-            var controllerOutput = pid.calculate(currentAngle);
+        var controllerOutput = pid.calculate(gyro.getRoll());
 
-            mDrivetrain.drive(controllerOutput, 0);
-        }
+        drive.drive(controllerOutput, 0);
+        
 
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        mDrivetrain.drive(0, 0);
+        drive.drive(0, 0);
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return false;
+        return pid.atSetpoint();
     }
 
 }

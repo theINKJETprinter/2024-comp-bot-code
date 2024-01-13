@@ -43,7 +43,6 @@ public class Robot extends TimedRobot {
   final RunIntake runIntakeBackward = new RunIntake(m_intakeSubsystem, Constants.intake.revSpeed);
   final ToggleBucket toggleBucket = new ToggleBucket(m_bucketSubsystem);
   final IntakeToggle toggleIntake = new IntakeToggle(m_intakeSubsystem);
-
  
   SendableChooser<Command> autoChooser = new SendableChooser<Command>();
   SendableChooser<Integer> controlChooser = new SendableChooser<Integer>();
@@ -54,7 +53,6 @@ public class Robot extends TimedRobot {
 
   final CommandXboxController movementController = new CommandXboxController(Constants.MOVEMENT_JOYSTICK);
   final CommandXboxController manipulatorController = new CommandXboxController(Constants.MANIPULATOR_JOYSTICK);
-  final CommandXboxController oneController = new CommandXboxController(0);
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -79,6 +77,7 @@ public class Robot extends TimedRobot {
     //starts the control type chooser
     controlChooser.setDefaultOption("Two Controler", 0);
     controlChooser.addOption("One controler", 1);
+    controlChooser.addOption("fake gyro", 2);
 
     SmartDashboard.putData("control type", controlChooser);
 
@@ -129,28 +128,63 @@ public class Robot extends TimedRobot {
       m_driveSubsystem.setDefaultCommand(
         new ArcadeDrive(
               m_driveSubsystem,
-              () -> ((-oneController.getLeftTriggerAxis() + oneController.getRightTriggerAxis())),
-              () -> (-oneController.getLeftX() )
+              () -> ((-movementController.getLeftTriggerAxis() + movementController.getRightTriggerAxis())),
+              () -> (-movementController.getLeftX() )
         ));
 
 
 
 
-        oneController.leftBumper() //intake
+        movementController.leftBumper() //intake
       .whileTrue(runIntake);
 
-      oneController.rightBumper()//outake
+      movementController.rightBumper()//outake
       .whileTrue(runIntakeBackward);
 
-      oneController.x()
+      movementController.x()
       .onTrue(toggleBucket);
 
-      oneController.a()
+      movementController.a()
       .onTrue(toggleIntake);
 
-      oneController.y()
+      movementController.y()
       .onTrue(toggleCompressor);
     }
+
+    else if (controlChooser.getSelected()==2){
+      m_driveSubsystem.setDefaultCommand(
+        new ArcadeDrive(
+              m_driveSubsystem,
+              () -> ((-movementController.getLeftTriggerAxis() + movementController.getRightTriggerAxis())),
+              () -> (-movementController.getLeftX() )
+        ));
+      gyro.setFakeStatus();
+
+        movementController.leftBumper() //intake
+      .whileTrue(runIntake);
+
+      movementController.rightBumper()//outake
+      .whileTrue(runIntakeBackward);
+
+      movementController.x()
+      .onTrue(toggleBucket);
+
+      movementController.a()
+      .onTrue(toggleIntake);
+
+      movementController.y()
+      .onTrue(toggleCompressor);
+      SmartDashboard.putNumber("yaw Input", 0);
+      SmartDashboard.putNumber("roll Input", 0);
+      gyro.setDefaultCommand(
+      new fakeGyro(
+        gyro, 
+          () -> (SmartDashboard.getNumber("yaw Input", 0)), 
+          () -> (SmartDashboard.getNumber("roll Input", 0))
+
+          ));
+    }
+    
   }
     
   
