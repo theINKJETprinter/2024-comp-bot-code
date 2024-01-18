@@ -7,9 +7,17 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.autoRoutines.*;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
 
 
 /**
@@ -21,8 +29,29 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
-  private RobotContainer m_robotContainer;
 
+  final Pneumatics pneumatics = new Pneumatics();
+  final DriveBase m_driveSubsystem = new DriveBase();
+  final Intake m_intakeSubsystem = new Intake(pneumatics);
+  final Bucket m_bucketSubsystem = new Bucket(pneumatics);
+  final ToggleCompressor toggleCompressor = new ToggleCompressor(pneumatics);
+  final Gyro gyro = new Gyro();
+
+  final RunIntake runIntake = new RunIntake(m_intakeSubsystem, Constants.intake.fwdSpeed);
+  final RunIntake runIntakeBackward = new RunIntake(m_intakeSubsystem, Constants.intake.revSpeed);
+  final ToggleBucket toggleBucket = new ToggleBucket(m_bucketSubsystem);
+  final IntakeToggle toggleIntake = new IntakeToggle(m_intakeSubsystem);
+
+ 
+  SendableChooser<Command> autoChooser = new SendableChooser<Command>();
+  SendableChooser<Integer> controlChooser = new SendableChooser<Integer>();
+
+
+
+
+
+  final CommandXboxController movementController = new CommandXboxController(Constants.MOVEMENT_JOYSTICK);
+  final CommandXboxController manipulatorController = new CommandXboxController(Constants.MANIPULATOR_JOYSTICK);
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -31,13 +60,102 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
+    configureControls();
+    
+    // starts the auto selector
+    autoChooser.setDefaultOption("Auto Balance Mobile", new AutonomousBalanceMobile(m_driveSubsystem, m_intakeSubsystem, m_bucketSubsystem, gyro));
+    autoChooser.addOption("Auto Grab", new AutonomousGrab(m_driveSubsystem, m_intakeSubsystem, m_bucketSubsystem));
+    autoChooser.addOption("Auto No Mobile", new AutonomousBalanceNoMobile(m_driveSubsystem, m_intakeSubsystem, m_bucketSubsystem, gyro));
+    autoChooser.addOption("doNothing", new InstantCommand());
+    autoChooser.addOption("Dump Do Nothing", new AutonomousDumpDoNothing(m_driveSubsystem, m_intakeSubsystem, m_bucketSubsystem));
+  
+    SmartDashboard.putData("autos: ", autoChooser);
+
+
+
+    //starts the control type chooser
+    controlChooser.setDefaultOption("Two Controler", 0);
+    controlChooser.addOption("One controler", 1);
+
+    SmartDashboard.putData("control type", controlChooser);
+
+
+    //start cameraServer
+    CameraServer.startAutomaticCapture();
+    CameraServer.startAutomaticCapture();
+    
+
+    configureControls();
+
+
+    gyro.log();
+
+    m_driveSubsystem.resetEncoder();
   }
+
+  private void configureControls() {
+    if (controlChooser.getSelected()==null){}
+
+    else if (controlChooser.getSelected()==0){
+      m_driveSubsystem.setDefaultCommand(
+        new ArcadeDrive(
+              m_driveSubsystem,
+              () -> ((-movementController.getLeftTriggerAxis() + movementController.getRightTriggerAxis())),
+              () -> (-movementController.getLeftX() )
+        ));
+
+
+
+
+      manipulatorController.leftBumper() //intake
+      .whileTrue(runIntake);
+
+      manipulatorController.rightBumper()//outake
+      .whileTrue(runIntakeBackward);
+
+      manipulatorController.x()
+      .onTrue(toggleBucket);
+
+      manipulatorController.a()
+      .onTrue(toggleIntake);
+
+      manipulatorController.y()
+      .onTrue(toggleCompressor);
+    }
+    else if (controlChooser.getSelected()==1){
+      m_driveSubsystem.setDefaultCommand(
+        new ArcadeDrive(
+              m_driveSubsystem,
+              () -> ((-movementController.getLeftTriggerAxis() + movementController.getRightTriggerAxis())),
+              () -> (-movementController.getLeftX() )
+        ));
+
+
+
+
+        movementController.leftBumper() //intake
+      .whileTrue(runIntake);
+
+      movementController.rightBumper()//outake
+      .whileTrue(runIntakeBackward);
+
+      movementController.x()
+      .onTrue(toggleBucket);
+
+      movementController.a()
+      .onTrue(toggleIntake);
+
+      movementController.y()
+      .onTrue(toggleCompressor);
+    }
+  }
+    
+  
 
   /**
    * This function is called every robot packet, no matter the mode. Use this for items like
    * diagnostics that you want ran during disabled, autonomous, teleoperated and test.
-   *
+   * 
    * <p>This runs after the mode specific periodic functions, but before
    * LiveWindow and SmartDashboard integrated updating.
    */
@@ -48,6 +166,7 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+
   }
 
   /**
@@ -55,10 +174,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
+    CommandScheduler.getInstance().cancelAll();
   }
 
   @Override
   public void disabledPeriodic() {
+    CommandScheduler.getInstance().cancelAll();
   }
 
   /**
@@ -66,12 +187,13 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_autonomousCommand = autoChooser.getSelected();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+    
   }
 
   /**
@@ -88,8 +210,10 @@ public class Robot extends TimedRobot {
     // continue until interrupted by another command, remove
     // this line or comment it out.
     if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
+      CommandScheduler.getInstance().cancelAll();
     }
+    configureControls();
+    
   }
 
   /**
@@ -111,4 +235,6 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
   }
+
+  
 }
