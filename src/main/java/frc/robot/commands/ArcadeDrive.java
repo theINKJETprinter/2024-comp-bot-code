@@ -21,10 +21,9 @@ import frc.robot.subsystems.DriveBase;
 public class ArcadeDrive extends RunCommand {
   /**
    * Creates a new ArcadeDrive command.
-   *
-   * @param left       The control input for the left side of the drive
-   * @param right      The control input for the right sight of the drive
    * @param driveSubsystem The driveSubsystem subsystem to drive
+   * @param speed      The forward speed value for the robot
+   * @param right      The turn speed value for the robot
    */
   public ArcadeDrive(DriveBase drive, DoubleSupplier speed, DoubleSupplier rotation) {
     super(
@@ -32,13 +31,11 @@ public class ArcadeDrive extends RunCommand {
         SmartDashboard.putString("On", "true");
 
         drive.drive(
-          MathUtil.applyDeadband(speed.getAsDouble(), 0.1)*Constants.drive.driveSpeedRatio,
-          MathUtil.applyDeadband(rotation.getAsDouble(), 0.1)*Constants.drive.rotationSpeedRatio
+          MathUtil.applyDeadband(speed.getAsDouble(), 0.1),
+          MathUtil.applyDeadband(rotation.getAsDouble(), 0.1)
         );
       },
       drive
     );
-    addRequirements(drive);
-
   }
 }

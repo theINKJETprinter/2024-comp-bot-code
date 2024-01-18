@@ -5,95 +5,40 @@
 package frc.robot;
 
 /**
- * The Constants class provides a convenient place for teams to hold robot-wide
- * numerical or boolean
- * constants. This class should not be used for any other purpose. All constants
- * should be declared
+ * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
+ * constants. This class should not be used for any other purpose. All constants should be declared
  * globally (i.e. public static). Do not put anything functional in this class.
  *
- * <p>
- * It is advised to statically import this class (or one of its inner classes)
- * wherever the
+ * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
 
-    // drive Constants
-    public static final class drive {
-
-        // f: front
-        // t: top
-        // r: rear
-
-        // left
-        public static final int lf = 3;
-        public static final int lt = 4;
-        public static final int lr = 9;
-
-        // right
-        public static final int rf = 7;
-        public static final int rt = 5;
-        public static final int rr = 8;
-        public static final double gearRatio=8.5;
-        
-        
-        public static double rotationSpeedRatio= 0.6;
-        public static final double driveSpeedRatio= 1;
-
-        public static double rampspeed= .25;
+    // bucket Constants
+    public final class bucket{
+        public static final int solenoidForwardPort = 5;
+        public static final int solenoidBackwardPort = 4; 
     }
 
-    // Changing Solenoid Values idk 50/50 this'll work
-    public static final class bucket {
-        public static final class solenoid {
-            public static final int fwdPort = 6;
-            public static final int revPort = 7;
-
-        }
-    }
-
-    public static final class intake{
-        public static final class solenoid {
-            public static final int fwdPort = 4;
-            public static final int revPort = 5;
-
-        }
-        public static final int motor1 = 6;
-        public static final int motor2 = 11;
-        
-        //reversed
-        public static final double fwdSpeed = .5;
-        public static final double revSpeed = -.2;
+    // Motor Constants
+    public static final class drive{
+        public static final int LEFT_MOTOR = 3;
+        public static final int REAR_LEFT_MOTOR = 2;
+        public static final int RIGHT_MOTOR = 0;
+        public static final int REAR_RIGHT_MOTOR = 1;
+        public static final double DRIVE_SPEED_MULTIPLYER = .6;
     }
 
     public static final class auto{
-        public static final double fwdSpeed = 0.5;
-        public static final double revSpeed = -0.4;
-        public static final double wheelRadius=3;
-        public static final double TicksPerRotation= 4096;
-
-        public static final class balancePID{
-            public static final double kP = 0.06;
-            public static final double kI = 0;
-            public static final double kD = 0.05;
-            public static final double outputMax = 1;
-            public static final double outputMin = -1;
-
-            public static final double positionTolerance = 2;
-            public static final double velocityTolerance = 2;
-        }
-        public static final class straightPID{
-            public static final double kp = 0.09;
-            public static final double ki = 0;
-            public static final double kd = 0.1;
-
-            public static final double positionTolerance = 1;
-        }
+        public static final double AUTONOMOUS_FORWARD_SPEED = 0.6;
+        public static final double AUTONOMOUS_BACK_SPEED = 0.4;
     }
+
+    
+    
 
     public static final int MOVEMENT_JOYSTICK = 0;
     public static final int MANIPULATOR_JOYSTICK = 1;
-    public static final int OneJoystick=2;
-    public static double driveSpeedRatio;
+
 
 }
